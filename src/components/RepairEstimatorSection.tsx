@@ -23,9 +23,7 @@ import {
   Mail, 
   Search, 
   CheckCircle2, 
-  Phone, 
-  Calendar,
-  AlertCircle
+  Phone
 } from 'lucide-react';
 
 interface RepairEstimatorSectionProps {
@@ -37,10 +35,7 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
   initialCategoryId = 'phones',
   onBookQuote
 }) => {
-  // Active step: 1 = Category, 2 = Model, 3 = Issue, 4 = Service & Reservation, 5 = Confirmed
   const [currentStep, setCurrentStep] = useState<number>(1);
-
-  // Form selections
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategoryId);
   const [selectedBrand, setSelectedBrand] = useState<string>('All');
   const [modelSearch, setModelSearch] = useState<string>('');
@@ -48,7 +43,6 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
   const [selectedIssueId, setSelectedIssueId] = useState<string>('screen-replacement');
   const [serviceMode, setServiceMode] = useState<'in-store' | 'mobile-van' | 'mail-in'>('in-store');
   const [isDataImportant, setIsDataImportant] = useState<boolean>(true);
-  const [customerNotes, setCustomerNotes] = useState<string>('');
 
   // Booking contact inputs
   const [customerName, setCustomerName] = useState<string>('');
@@ -59,29 +53,23 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
   const [streetAddress, setStreetAddress] = useState<string>('');
   const [confirmedTicketId, setConfirmedTicketId] = useState<string>('');
 
-  // Category icons mapping
   const categoryIcons: Record<string, React.ReactNode> = {
-    phones: <Smartphone className="w-5 h-5" />,
-    tablets: <Tablet className="w-5 h-5" />,
-    laptops: <Laptop className="w-5 h-5" />,
-    consoles: <Gamepad2 className="w-5 h-5" />,
-    microsoldering: <Cpu className="w-5 h-5" />,
-    smartwatches: <Watch className="w-5 h-5" />
+    phones: <Smartphone className="w-5 h-5 text-[#1382e8]" />,
+    tablets: <Tablet className="w-5 h-5 text-[#1382e8]" />,
+    laptops: <Laptop className="w-5 h-5 text-[#1382e8]" />,
+    consoles: <Gamepad2 className="w-5 h-5 text-[#1382e8]" />,
+    microsoldering: <Cpu className="w-5 h-5 text-[#1382e8]" />,
+    smartwatches: <Watch className="w-5 h-5 text-[#1382e8]" />
   };
 
-  // Current category object
   const currentCategoryObj = REPAIR_CATEGORIES.find(c => c.id === selectedCategory) || REPAIR_CATEGORIES[0];
-
-  // Available models for active category
   const allModelsForCat = REPAIR_MODELS[selectedCategory] || [];
   
-  // Available brands in this category
   const availableBrands = useMemo(() => {
     const brands = Array.from(new Set(allModelsForCat.map(m => m.brand)));
     return ['All', ...brands];
   }, [allModelsForCat]);
 
-  // Filtered models by brand and search
   const filteredModels = useMemo(() => {
     return allModelsForCat.filter(m => {
       if (selectedBrand !== 'All' && m.brand !== selectedBrand) return false;
@@ -96,7 +84,6 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
   const currentModel = allModelsForCat.find(m => m.id === selectedModelId) || allModelsForCat[0];
   const currentIssue = REPAIR_ISSUES.find(i => i.id === selectedIssueId) || REPAIR_ISSUES[0];
 
-  // Dynamic price calculation
   const calculatePrice = () => {
     let price = currentIssue?.basePrice || 89;
     if (currentModel) {
@@ -123,7 +110,6 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
     ? 'Same-Day Walk-In (30-60 mins)'
     : 'Mail-In (Expedited 1-3 days)';
 
-  // Navigation handlers between panes
   const handleSelectCategory = (catId: string) => {
     setSelectedCategory(catId);
     setSelectedBrand('All');
@@ -132,19 +118,16 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
     if (newModels.length > 0) {
       setSelectedModelId(newModels[0].id);
     }
-    // Auto advance to next pane
     setCurrentStep(2);
   };
 
   const handleSelectModel = (modelId: string) => {
     setSelectedModelId(modelId);
-    // Auto advance to next pane
     setCurrentStep(3);
   };
 
   const handleSelectIssue = (issueId: string) => {
     setSelectedIssueId(issueId);
-    // Auto advance to next pane
     setCurrentStep(4);
   };
 
@@ -171,8 +154,7 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
         customerEmail,
         preferredDate,
         preferredTime,
-        address: streetAddress,
-        notes: customerNotes
+        address: streetAddress
       });
     }
   };
@@ -190,33 +172,29 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
     { num: 1, label: 'Device', summary: currentCategoryObj.name.split(' ')[0] },
     { num: 2, label: 'Model', summary: currentModel?.name ? currentModel.name.split(' ').slice(0, 3).join(' ') : 'Model' },
     { num: 3, label: 'Issue', summary: currentIssue?.category || 'Display' },
-    { num: 4, label: 'Service', summary: serviceMode === 'in-store' ? 'Walk-In' : serviceMode === 'mobile-van' ? 'Mobile Van' : 'Mail-In' }
+    { num: 4, label: 'Service', summary: serviceMode === 'in-store' ? 'Walk-In' : serviceMode === 'mobile-van' ? 'Mobile' : 'Mail-In' }
   ];
 
   return (
-    <section id="estimator" className="py-16 lg:py-24 relative overflow-hidden bg-slate-950/90 border-t border-slate-900">
-      
-      {/* Subtle radial ambient background */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-[radial-gradient(ellipse_at_top,rgba(14,165,233,0.08),transparent_70%)] pointer-events-none" />
-
+    <section id="estimator" className="py-20 lg:py-28 relative overflow-hidden bg-[#f6f7f8] border-b border-[#e8eaee]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Editorial Eyebrow & Header (Makcliff Style) */}
+        {/* Header */}
         <div className="max-w-3xl mb-12">
-          <span className="eyebrow mb-3">
-            <span className="inline-block h-px w-8 bg-cyan-400/60" aria-hidden="true"></span>
-            Diagnostic Engine — Upfront Pricing
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white font-heading tracking-tight leading-tight">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#e8eaee] text-xs font-mono text-[#41454e] mb-3">
+            <span className="w-2 h-2 rounded-full bg-[#1382e8]"></span>
+            <span>Upfront Price Calculator</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0c0d10] font-heading tracking-tight leading-tight">
             Configure your repair in seconds
           </h2>
-          <p className="text-slate-300 text-sm sm:text-base mt-2.5 max-w-2xl leading-relaxed">
-            Select your device and symptoms below. Instant price estimate, 45-minute turnaround, and full 60-day shop warranty with zero hidden fees.
+          <p className="text-[#41454e] text-sm sm:text-base mt-2 max-w-2xl leading-relaxed">
+            Choose your device and symptom. Live price estimate, 45-minute turnaround, and full 60-day warranty with zero upfront payment.
           </p>
         </div>
 
-        {/* Step Navigation Progress Track */}
-        <div className="mb-8 border-b border-slate-800/80 pb-4">
+        {/* Step Navigation Progress Bar */}
+        <div className="mb-8 border-b border-[#e8eaee] pb-4">
           <div className="grid grid-cols-4 gap-2 sm:gap-4">
             {stepsMeta.map((s) => {
               const isActive = currentStep === s.num;
@@ -231,19 +209,19 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
                   disabled={!isPast && currentStep !== 5 && !isActive}
                   className={`flex flex-col text-left py-2 px-1 transition-all ${
                     isActive
-                      ? 'border-b-2 border-cyan-400 text-white'
+                      ? 'border-b-2 border-[#1382e8] text-[#0c0d10]'
                       : isPast
-                      ? 'border-b-2 border-slate-700 text-slate-400 hover:text-white cursor-pointer'
-                      : 'border-b-2 border-transparent text-slate-600 cursor-not-allowed'
+                      ? 'border-b-2 border-[#0d9963] text-[#41454e] hover:text-[#0c0d10] cursor-pointer'
+                      : 'border-b-2 border-transparent text-[#6b7079] cursor-not-allowed'
                   }`}
                 >
                   <div className="flex items-center gap-1.5 text-xs font-mono">
-                    <span className={`tabular ${isActive ? 'text-cyan-400 font-bold' : isPast ? 'text-emerald-400' : 'text-slate-600'}`}>
+                    <span className={`tabular font-bold ${isActive ? 'text-[#1382e8]' : isPast ? 'text-[#0d9963]' : 'text-[#6b7079]'}`}>
                       {isPast ? '✓' : `0${s.num}`}
                     </span>
                     <span className="font-semibold hidden sm:inline">{s.label}</span>
                   </div>
-                  <span className="text-[11px] text-slate-400 truncate mt-0.5">
+                  <span className="text-[11px] text-[#6b7079] truncate mt-0.5">
                     {s.summary}
                   </span>
                 </button>
@@ -255,106 +233,100 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
         {/* Two-Column Responsive Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Left Sticky Summary & Assurances (4 cols) */}
-          <div className="lg:col-span-4 lg:sticky lg:top-28 space-y-6">
-            
-            {/* Live Pricing Card */}
-            <div className="rounded-2xl surface-card p-6 border border-slate-800/90 shadow-xl space-y-5">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                <span className="text-xs font-mono uppercase tracking-wider text-cyan-400">
-                  Live Estimate
+          {/* Left Column: Summary Card (4 cols - Sticky) */}
+          <div className="lg:col-span-4 lg:sticky lg:top-28 space-y-4">
+            <div className="rote-card p-6 bg-white space-y-5 border border-[#e8eaee]">
+              
+              <div className="flex items-center justify-between pb-3 border-b border-[#e8eaee]">
+                <span className="text-xs font-mono uppercase tracking-wider text-[#6b7079] font-semibold">
+                  Live Quote
                 </span>
-                <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-[#e9f7f0] text-[#0d9963] border border-[#bfe8d3]">
                   60-Day Warranty
                 </span>
               </div>
 
-              {/* Selected Attributes */}
-              <div className="space-y-2.5 text-xs">
-                <div className="flex justify-between py-1 border-b border-slate-800/50">
-                  <span className="text-slate-400">Category:</span>
-                  <span className="font-semibold text-white">{currentCategoryObj.name}</span>
+              {/* Selections */}
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between py-1 border-b border-[#f6f7f8]">
+                  <span className="text-[#6b7079]">Category:</span>
+                  <span className="font-semibold text-[#0c0d10]">{currentCategoryObj.name}</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-slate-800/50">
-                  <span className="text-slate-400">Device:</span>
-                  <span className="font-bold text-white text-right truncate max-w-[180px]">{currentModel?.name}</span>
+                <div className="flex justify-between py-1 border-b border-[#f6f7f8]">
+                  <span className="text-[#6b7079]">Model:</span>
+                  <span className="font-bold text-[#0c0d10] text-right truncate max-w-[170px]">{currentModel?.name}</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-slate-800/50">
-                  <span className="text-slate-400">Issue:</span>
-                  <span className="font-bold text-cyan-400 text-right truncate max-w-[180px]">{currentIssue?.name}</span>
+                <div className="flex justify-between py-1 border-b border-[#f6f7f8]">
+                  <span className="text-[#6b7079]">Repair:</span>
+                  <span className="font-bold text-[#1382e8] text-right truncate max-w-[170px]">{currentIssue?.name}</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-slate-800/50">
-                  <span className="text-slate-400">Service:</span>
-                  <span className="font-semibold text-slate-200">
-                    {serviceMode === 'in-store' ? '🏬 Walk-In (Manahawkin)' : serviceMode === 'mobile-van' ? '🚐 Mobile Van Unit' : '📦 Mail-In'}
+                <div className="flex justify-between py-1 border-b border-[#f6f7f8]">
+                  <span className="text-[#6b7079]">Delivery:</span>
+                  <span className="font-semibold text-[#0c0d10]">
+                    {serviceMode === 'in-store' ? 'Walk-In Store' : serviceMode === 'mobile-van' ? 'Mobile Van Unit' : 'Mail-In'}
                   </span>
                 </div>
               </div>
 
               {/* Price Calculation Box */}
-              <div className="bg-slate-950/80 p-4 rounded-xl border border-slate-800 text-center">
-                <span className="text-[11px] text-slate-400 uppercase tracking-wider font-mono block mb-1">
-                  Estimated Repair Cost
+              <div className="bg-[#f6f7f8] p-4 rounded-xl border border-[#e8eaee] text-center">
+                <span className="text-[11px] text-[#6b7079] uppercase tracking-wider font-mono block mb-1">
+                  Estimated Total
                 </span>
-                <div className="text-3xl sm:text-4xl font-black text-white font-heading">
+                <div className="text-3xl sm:text-4xl font-black text-[#0c0d10] font-heading tabular">
                   ${estimatedPrice}
-                  <span className="text-xs text-slate-400 font-normal"> / total</span>
+                  <span className="text-xs text-[#6b7079] font-normal"> / est.</span>
                 </div>
-                <div className="flex items-center justify-center gap-1.5 text-xs text-cyan-400 mt-2 font-semibold">
+                <div className="flex items-center justify-center gap-1.5 text-xs text-[#1382e8] mt-2 font-semibold">
                   <Clock className="w-3.5 h-3.5" />
                   <span>{estimatedTime}</span>
                 </div>
               </div>
 
-              {/* What Happens Next (Makcliff Style) */}
-              <div className="pt-2 border-t border-slate-800/80 space-y-3">
-                <span className="text-xs font-mono uppercase tracking-wider text-slate-400 block font-semibold">
-                  What Happens Next:
-                </span>
-                <div className="space-y-2 text-xs text-slate-300">
-                  <div className="flex items-start gap-2.5">
-                    <span className="font-mono text-cyan-400 font-bold text-[11px] tabular">01</span>
-                    <span><strong>No payment upfront:</strong> Pay only after your repaired device is tested.</span>
-                  </div>
-                  <div className="flex items-start gap-2.5">
-                    <span className="font-mono text-cyan-400 font-bold text-[11px] tabular">02</span>
-                    <span><strong>Parts held:</strong> Certified OEM-grade component reserved for you.</span>
-                  </div>
-                  <div className="flex items-start gap-2.5">
-                    <span className="font-mono text-cyan-400 font-bold text-[11px] tabular">03</span>
-                    <span><strong>18-Point bench test:</strong> Full hardware check before hand-off.</span>
-                  </div>
+              {/* What Happens Next Checklist */}
+              <div className="pt-2 border-t border-[#e8eaee] space-y-2 text-xs text-[#41454e]">
+                <div className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-[#0d9963] shrink-0 mt-0.5" />
+                  <span><strong>Zero upfront charge:</strong> Pay only after testing your repaired device.</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-[#0d9963] shrink-0 mt-0.5" />
+                  <span><strong>OEM-grade parts:</strong> Quality verified before installation.</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Check className="w-4 h-4 text-[#0d9963] shrink-0 mt-0.5" />
+                  <span><strong>60-day shop warranty:</strong> Full coverage on parts & labor.</span>
                 </div>
               </div>
 
-              {/* Technician contact */}
-              <div className="pt-3 border-t border-slate-800/80 text-xs flex items-center justify-between text-slate-400">
+              {/* Technician phone */}
+              <div className="pt-3 border-t border-[#e8eaee] text-xs flex items-center justify-between text-[#6b7079]">
                 <span>Questions? Call the shop:</span>
-                <a href="tel:6099943235" className="text-cyan-400 hover:text-cyan-300 font-bold">
+                <a href="tel:6099943235" className="text-[#1382e8] hover:text-[#0e6fcc] font-semibold">
                   (609) 994-3235
                 </a>
               </div>
-            </div>
 
+            </div>
           </div>
 
-          {/* Right Column: Dynamic Step Pane (8 cols) */}
+          {/* Right Column: Active Step Pane (8 cols) */}
           <div className="lg:col-span-8">
-            <div className="rounded-2xl surface-card p-6 sm:p-8 border border-slate-800/90 shadow-2xl min-h-[500px] flex flex-col justify-between">
+            <div className="rote-card p-6 sm:p-8 bg-white border border-[#e8eaee] min-h-[460px] flex flex-col justify-between">
               
-              {/* PANE 1: Device Category Selection */}
+              {/* PANE 1: Category */}
               {currentStep === 1 && (
                 <div className="space-y-6 animate-fadeIn">
-                  <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+                  <div className="flex items-center justify-between pb-4 border-b border-[#e8eaee]">
                     <div>
-                      <span className="text-xs font-mono text-cyan-400 uppercase tracking-wider block font-bold">
+                      <span className="text-xs font-mono text-[#1382e8] uppercase tracking-wider block font-bold">
                         Step 01 / 04
                       </span>
-                      <h3 className="text-xl font-bold text-white font-heading mt-0.5">
+                      <h3 className="text-xl font-bold text-[#0c0d10] font-heading mt-0.5">
                         Select device category
                       </h3>
                     </div>
-                    <span className="text-xs text-slate-400">Click to choose</span>
+                    <span className="text-xs text-[#6b7079]">Click to choose</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
@@ -367,21 +339,21 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
                           onClick={() => handleSelectCategory(cat.id)}
                           className={`flex flex-col items-start p-4 rounded-xl border text-left transition-all cursor-pointer group ${
                             isSelected
-                              ? 'bg-slate-900 border-cyan-500 text-white ring-1 ring-cyan-500 shadow-md'
-                              : 'bg-slate-950/60 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900'
+                              ? 'bg-[#e7f2fd]/50 border-[#1382e8] shadow-sm'
+                              : 'bg-white border-[#e8eaee] hover:border-[#1382e8]/40 hover:bg-[#f6f7f8]'
                           }`}
                         >
-                          <div className={`p-2.5 rounded-lg mb-3 transition-colors ${
-                            isSelected ? 'bg-cyan-500 text-slate-950' : 'bg-slate-800 text-cyan-400 group-hover:bg-slate-750'
+                          <div className={`p-2.5 rounded-lg mb-3 ${
+                            isSelected ? 'bg-[#1382e8] text-white' : 'bg-[#f6f7f8]'
                           }`}>
-                            {categoryIcons[cat.id] || <Wrench className="w-5 h-5" />}
+                            {categoryIcons[cat.id] || <Wrench className="w-5 h-5 text-[#1382e8]" />}
                           </div>
-                          <span className="text-sm font-bold text-white block">{cat.name}</span>
-                          <span className="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                          <span className="text-sm font-bold text-[#0c0d10] block">{cat.name}</span>
+                          <span className="text-xs text-[#6b7079] mt-1 line-clamp-2">
                             {cat.description}
                           </span>
-                          <div className="mt-3 flex items-center gap-1 text-[11px] text-cyan-400 font-semibold group-hover:translate-x-1 transition-transform">
-                            <span>Select & Choose Model</span>
+                          <div className="mt-3 flex items-center gap-1 text-xs text-[#1382e8] font-semibold group-hover:translate-x-1 transition-transform">
+                            <span>Select Model</span>
                             <ArrowRight className="w-3 h-3" />
                           </div>
                         </button>
@@ -391,28 +363,28 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
                 </div>
               )}
 
-              {/* PANE 2: Exact Model Selection */}
+              {/* PANE 2: Model */}
               {currentStep === 2 && (
                 <div className="space-y-6 animate-fadeIn">
-                  <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+                  <div className="flex items-center justify-between pb-4 border-b border-[#e8eaee]">
                     <div>
-                      <span className="text-xs font-mono text-cyan-400 uppercase tracking-wider block font-bold">
+                      <span className="text-xs font-mono text-[#1382e8] uppercase tracking-wider block font-bold">
                         Step 02 / 04
                       </span>
-                      <h3 className="text-xl font-bold text-white font-heading mt-0.5">
+                      <h3 className="text-xl font-bold text-[#0c0d10] font-heading mt-0.5">
                         Which model do you have?
                       </h3>
                     </div>
                     <button
                       onClick={() => setCurrentStep(1)}
-                      className="text-xs text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer"
+                      className="text-xs text-[#6b7079] hover:text-[#0c0d10] flex items-center gap-1 cursor-pointer"
                     >
                       <ArrowLeft className="w-3.5 h-3.5" />
-                      <span>Back to Categories</span>
+                      <span>Back</span>
                     </button>
                   </div>
 
-                  {/* Filter Controls: Brand pills & Search */}
+                  {/* Brand Filter & Search */}
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
                       {availableBrands.map((b) => (
@@ -422,8 +394,8 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
                           onClick={() => setSelectedBrand(b)}
                           className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                             selectedBrand === b
-                              ? 'bg-cyan-500 text-slate-950 font-bold'
-                              : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
+                              ? 'bg-[#0c0d10] text-white'
+                              : 'bg-[#f6f7f8] text-[#41454e] hover:bg-[#e8eaee] border border-[#e8eaee]'
                           }`}
                         >
                           {b}
@@ -432,13 +404,13 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
                     </div>
 
                     <div className="relative">
-                      <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <Search className="w-4 h-4 text-[#6b7079] absolute left-3.5 top-1/2 -translate-y-1/2" />
                       <input
                         type="text"
                         value={modelSearch}
                         onChange={(e) => setModelSearch(e.target.value)}
-                        placeholder={`Search ${currentCategoryObj.name} models (e.g. 15 Pro, S24, Air 4th)...`}
-                        className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                        placeholder={`Search ${currentCategoryObj.name} models...`}
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#f6f7f8] border border-[#e8eaee] text-xs sm:text-sm text-[#0c0d10] placeholder-[#6b7079] focus:outline-none focus:border-[#1382e8] focus:bg-white"
                       />
                     </div>
                   </div>
@@ -455,42 +427,42 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
                             onClick={() => handleSelectModel(m.id)}
                             className={`flex items-center justify-between p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
                               isSelected
-                                ? 'bg-slate-900 border-cyan-500 text-white ring-1 ring-cyan-500'
-                                : 'bg-slate-950/60 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900'
+                                ? 'bg-[#e7f2fd]/60 border-[#1382e8] text-[#0c0d10]'
+                                : 'bg-white border-[#e8eaee] text-[#41454e] hover:border-[#1382e8]/40 hover:bg-[#f6f7f8]'
                             }`}
                           >
                             <div>
-                              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 uppercase mr-2">
+                              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#f6f7f8] text-[#6b7079] uppercase mr-2 border border-[#e8eaee]">
                                 {m.brand}
                               </span>
-                              <span className="text-xs sm:text-sm font-semibold text-white">
+                              <span className="text-xs sm:text-sm font-semibold text-[#0c0d10]">
                                 {m.name}
                               </span>
                             </div>
-                            <span className="text-xs text-cyan-400 font-mono">Select &rarr;</span>
+                            <span className="text-xs text-[#1382e8] font-semibold">Select &rarr;</span>
                           </button>
                         );
                       })
                     ) : (
-                      <div className="col-span-2 text-center py-8 text-slate-500 text-xs">
+                      <div className="col-span-2 text-center py-8 text-[#6b7079] text-xs">
                         No models found matching "{modelSearch}". You can write it in at step 4.
                       </div>
                     )}
                   </div>
 
                   {/* Bottom Navigation */}
-                  <div className="pt-4 border-t border-slate-800 flex justify-between items-center">
+                  <div className="pt-4 border-t border-[#e8eaee] flex justify-between items-center">
                     <button
                       type="button"
                       onClick={() => setCurrentStep(1)}
-                      className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-950 border border-slate-800 cursor-pointer"
+                      className="px-4 py-2 rounded-xl text-xs font-semibold text-[#41454e] hover:text-[#0c0d10] bg-[#f6f7f8] border border-[#e8eaee] cursor-pointer"
                     >
                       &larr; Back
                     </button>
                     <button
                       type="button"
                       onClick={() => setCurrentStep(3)}
-                      className="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-950 bg-cyan-400 hover:bg-cyan-300 transition-all cursor-pointer"
+                      className="px-5 py-2.5 rounded-xl text-xs font-semibold text-white bg-[#0c0d10] hover:bg-[#23262f] cursor-pointer"
                     >
                       Next: Choose Issue &rarr;
                     </button>
@@ -498,24 +470,24 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
                 </div>
               )}
 
-              {/* PANE 3: Issue & Diagnostic Symptoms */}
+              {/* PANE 3: Issue */}
               {currentStep === 3 && (
                 <div className="space-y-6 animate-fadeIn">
-                  <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+                  <div className="flex items-center justify-between pb-4 border-b border-[#e8eaee]">
                     <div>
-                      <span className="text-xs font-mono text-cyan-400 uppercase tracking-wider block font-bold">
+                      <span className="text-xs font-mono text-[#1382e8] uppercase tracking-wider block font-bold">
                         Step 03 / 04
                       </span>
-                      <h3 className="text-xl font-bold text-white font-heading mt-0.5">
+                      <h3 className="text-xl font-bold text-[#0c0d10] font-heading mt-0.5">
                         What problem is occurring?
                       </h3>
                     </div>
                     <button
                       onClick={() => setCurrentStep(2)}
-                      className="text-xs text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer"
+                      className="text-xs text-[#6b7079] hover:text-[#0c0d10] flex items-center gap-1 cursor-pointer"
                     >
                       <ArrowLeft className="w-3.5 h-3.5" />
-                      <span>Back to Models</span>
+                      <span>Back</span>
                     </button>
                   </div>
 
@@ -530,40 +502,40 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
                           onClick={() => handleSelectIssue(issue.id)}
                           className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
                             isSelected
-                              ? 'bg-slate-900 border-cyan-500 text-white ring-1 ring-cyan-500 shadow-md'
-                              : 'bg-slate-950/60 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900'
+                              ? 'bg-[#e7f2fd]/60 border-[#1382e8] text-[#0c0d10]'
+                              : 'bg-white border-[#e8eaee] text-[#41454e] hover:border-[#1382e8]/40 hover:bg-[#f6f7f8]'
                           }`}
                         >
-                          <div className="flex items-start justify-between gap-2 mb-1.5">
-                            <span className="text-xs sm:text-sm font-bold text-white leading-snug">{issue.name}</span>
-                            <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 shrink-0">
+                          <div className="flex items-start justify-between gap-2 mb-1">
+                            <span className="text-xs sm:text-sm font-bold text-[#0c0d10] leading-snug">{issue.name}</span>
+                            <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#f6f7f8] text-[#1382e8] border border-[#e8eaee] shrink-0">
                               ~{issue.estimatedMinutes}m
                             </span>
                           </div>
-                          <p className="text-[11px] text-slate-400 leading-relaxed mb-2 line-clamp-2">
+                          <p className="text-xs text-[#6b7079] leading-relaxed mb-2 line-clamp-2">
                             {issue.description}
                           </p>
-                          <div className="flex items-center justify-between text-[11px]">
-                            <span className="text-slate-400 font-mono">From ${issue.basePrice}</span>
-                            <span className="text-cyan-400 font-semibold">Select Issue &rarr;</span>
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-[#41454e] font-semibold">From ${issue.basePrice}</span>
+                            <span className="text-[#1382e8] font-semibold">Select &rarr;</span>
                           </div>
                         </button>
                       );
                     })}
                   </div>
 
-                  {/* Data Importance Toggle */}
-                  <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                  {/* Data Priority Toggle */}
+                  <div className="p-3.5 rounded-xl bg-[#f6f7f8] border border-[#e8eaee] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                     <div>
-                      <span className="font-bold text-white block">Data Preservation Priority:</span>
-                      <span className="text-slate-400 text-[11px]">Photos, contacts, messages, work documents</span>
+                      <span className="font-bold text-[#0c0d10] block">Data Preservation Priority:</span>
+                      <span className="text-[#6b7079]">Photos, contacts, messages, work documents</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => setIsDataImportant(true)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                          isDataImportant ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-400'
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                          isDataImportant ? 'bg-[#0d9963] text-white' : 'bg-white text-[#41454e] border border-[#e8eaee]'
                         }`}
                       >
                         Protect Data
@@ -571,8 +543,8 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
                       <button
                         type="button"
                         onClick={() => setIsDataImportant(false)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                          !isDataImportant ? 'bg-slate-700 text-white' : 'bg-slate-800 text-slate-400'
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                          !isDataImportant ? 'bg-[#0c0d10] text-white' : 'bg-white text-[#41454e] border border-[#e8eaee]'
                         }`}
                       >
                         Wipe is OK
@@ -581,18 +553,18 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
                   </div>
 
                   {/* Bottom Navigation */}
-                  <div className="pt-4 border-t border-slate-800 flex justify-between items-center">
+                  <div className="pt-4 border-t border-[#e8eaee] flex justify-between items-center">
                     <button
                       type="button"
                       onClick={() => setCurrentStep(2)}
-                      className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-slate-950 border border-slate-800 cursor-pointer"
+                      className="px-4 py-2 rounded-xl text-xs font-semibold text-[#41454e] hover:text-[#0c0d10] bg-[#f6f7f8] border border-[#e8eaee] cursor-pointer"
                     >
                       &larr; Back
                     </button>
                     <button
                       type="button"
                       onClick={() => setCurrentStep(4)}
-                      className="px-5 py-2.5 rounded-xl text-xs font-bold text-slate-950 bg-cyan-400 hover:bg-cyan-300 transition-all cursor-pointer"
+                      className="px-5 py-2.5 rounded-xl text-xs font-semibold text-white bg-[#0c0d10] hover:bg-[#23262f] cursor-pointer"
                     >
                       Next: Choose Service &rarr;
                     </button>
@@ -600,45 +572,45 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
                 </div>
               )}
 
-              {/* PANE 4: Service Delivery & Fast Reservation Form */}
+              {/* PANE 4: Service Delivery & Scheduling */}
               {currentStep === 4 && (
                 <form onSubmit={handleConfirmReservation} className="space-y-6 animate-fadeIn">
-                  <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+                  <div className="flex items-center justify-between pb-4 border-b border-[#e8eaee]">
                     <div>
-                      <span className="text-xs font-mono text-cyan-400 uppercase tracking-wider block font-bold">
+                      <span className="text-xs font-mono text-[#1382e8] uppercase tracking-wider block font-bold">
                         Step 04 / 04
                       </span>
-                      <h3 className="text-xl font-bold text-white font-heading mt-0.5">
-                        Choose service option & schedule
+                      <h3 className="text-xl font-bold text-[#0c0d10] font-heading mt-0.5">
+                        Delivery option & schedule
                       </h3>
                     </div>
                     <button
                       type="button"
                       onClick={() => setCurrentStep(3)}
-                      className="text-xs text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer"
+                      className="text-xs text-[#6b7079] hover:text-[#0c0d10] flex items-center gap-1 cursor-pointer"
                     >
                       <ArrowLeft className="w-3.5 h-3.5" />
-                      <span>Back to Issues</span>
+                      <span>Back</span>
                     </button>
                   </div>
 
-                  {/* 3 Service Mode Choices */}
+                  {/* 3 Choices */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <button
                       type="button"
                       onClick={() => setServiceMode('in-store')}
                       className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
                         serviceMode === 'in-store'
-                          ? 'bg-slate-900 border-cyan-500 text-white ring-1 ring-cyan-500'
-                          : 'bg-slate-950/60 border-slate-800 text-slate-300'
+                          ? 'bg-[#e7f2fd]/60 border-[#1382e8] text-[#0c0d10]'
+                          : 'bg-white border-[#e8eaee] text-[#41454e]'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <Store className="w-4 h-4 text-cyan-400" />
-                        <span className="text-[10px] font-mono text-emerald-400 font-bold">45 min</span>
+                        <Store className="w-4 h-4 text-[#1382e8]" />
+                        <span className="text-[10px] font-mono text-[#0d9963] font-bold">45 min</span>
                       </div>
-                      <div className="text-xs font-bold text-white">In-Store Walk-In</div>
-                      <div className="text-[11px] text-slate-400 mt-0.5">1636 Route 72 W, Manahawkin</div>
+                      <div className="text-xs font-bold text-[#0c0d10]">In-Store Walk-In</div>
+                      <div className="text-[11px] text-[#6b7079] mt-0.5">1636 Route 72 W, Manahawkin</div>
                     </button>
 
                     <button
@@ -646,16 +618,16 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
                       onClick={() => setServiceMode('mobile-van')}
                       className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer relative ${
                         serviceMode === 'mobile-van'
-                          ? 'bg-slate-900 border-cyan-500 text-white ring-1 ring-cyan-500'
-                          : 'bg-slate-950/60 border-slate-800 text-slate-300'
+                          ? 'bg-[#e7f2fd]/60 border-[#1382e8] text-[#0c0d10]'
+                          : 'bg-white border-[#e8eaee] text-[#41454e]'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <Truck className="w-4 h-4 text-cyan-400" />
-                        <span className="text-[10px] font-mono text-cyan-300 font-bold">Mobile</span>
+                        <Truck className="w-4 h-4 text-[#1382e8]" />
+                        <span className="text-[10px] font-mono text-[#1382e8] font-bold">Mobile</span>
                       </div>
-                      <div className="text-xs font-bold text-white">Mobile Van Unit</div>
-                      <div className="text-[11px] text-slate-400 mt-0.5">We drive to your driveway</div>
+                      <div className="text-xs font-bold text-[#0c0d10]">Mobile Van Unit</div>
+                      <div className="text-[11px] text-[#6b7079] mt-0.5">We drive to your driveway</div>
                     </button>
 
                     <button
@@ -663,75 +635,75 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
                       onClick={() => setServiceMode('mail-in')}
                       className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
                         serviceMode === 'mail-in'
-                          ? 'bg-slate-900 border-cyan-500 text-white ring-1 ring-cyan-500'
-                          : 'bg-slate-950/60 border-slate-800 text-slate-300'
+                          ? 'bg-[#e7f2fd]/60 border-[#1382e8] text-[#0c0d10]'
+                          : 'bg-white border-[#e8eaee] text-[#41454e]'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <Mail className="w-4 h-4 text-cyan-400" />
-                        <span className="text-[10px] font-mono text-blue-400 font-bold">US Mail</span>
+                        <Mail className="w-4 h-4 text-[#1382e8]" />
+                        <span className="text-[10px] font-mono text-[#41454e] font-bold">US Mail</span>
                       </div>
-                      <div className="text-xs font-bold text-white">Mail-In Service</div>
-                      <div className="text-[11px] text-slate-400 mt-0.5">Print packing slip & ship</div>
+                      <div className="text-xs font-bold text-[#0c0d10]">Mail-In Service</div>
+                      <div className="text-[11px] text-[#6b7079] mt-0.5">Print packing slip & ship</div>
                     </button>
                   </div>
 
-                  {/* Customer Contact Details */}
+                  {/* Contact Fields */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div>
-                      <label className="block text-slate-300 font-semibold mb-1">Your Full Name *</label>
+                      <label className="block text-[#41454e] font-semibold mb-1">Your Full Name *</label>
                       <input
                         type="text"
                         required
                         value={customerName}
                         onChange={(e) => setCustomerName(e.target.value)}
                         placeholder="John Miller"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-[#f6f7f8] border border-[#e8eaee] text-[#0c0d10] placeholder-[#6b7079] focus:outline-none focus:border-[#1382e8] focus:bg-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-slate-300 font-semibold mb-1">Phone Number (For SMS update) *</label>
+                      <label className="block text-[#41454e] font-semibold mb-1">Phone Number (For SMS updates) *</label>
                       <input
                         type="tel"
                         required
                         value={customerPhone}
                         onChange={(e) => setCustomerPhone(e.target.value)}
                         placeholder="(609) 000-0000"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-[#f6f7f8] border border-[#e8eaee] text-[#0c0d10] placeholder-[#6b7079] focus:outline-none focus:border-[#1382e8] focus:bg-white"
                       />
                     </div>
                   </div>
 
                   {serviceMode === 'mobile-van' && (
                     <div className="text-xs">
-                      <label className="block text-slate-300 font-semibold mb-1">Service Address (Home, Office, or Dock) *</label>
+                      <label className="block text-[#41454e] font-semibold mb-1">Service Address (Home, Office, or Dock) *</label>
                       <input
                         type="text"
                         required
                         value={streetAddress}
                         onChange={(e) => setStreetAddress(e.target.value)}
                         placeholder="123 Bayview Ave, Manahawkin / LBI / Stafford"
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-[#f6f7f8] border border-[#e8eaee] text-[#0c0d10] placeholder-[#6b7079] focus:outline-none focus:border-[#1382e8] focus:bg-white"
                       />
                     </div>
                   )}
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div>
-                      <label className="block text-slate-300 font-semibold mb-1">Preferred Date</label>
+                      <label className="block text-[#41454e] font-semibold mb-1">Preferred Date</label>
                       <input
                         type="date"
                         value={preferredDate}
                         onChange={(e) => setPreferredDate(e.target.value)}
-                        className="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-cyan-500"
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#f6f7f8] border border-[#e8eaee] text-[#0c0d10] focus:outline-none focus:border-[#1382e8] focus:bg-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-slate-300 font-semibold mb-1">Preferred Time Window</label>
+                      <label className="block text-[#41454e] font-semibold mb-1">Preferred Time</label>
                       <select
                         value={preferredTime}
                         onChange={(e) => setPreferredTime(e.target.value)}
-                        className="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-cyan-500 cursor-pointer"
+                        className="w-full px-3.5 py-2 rounded-xl bg-[#f6f7f8] border border-[#e8eaee] text-[#0c0d10] focus:outline-none focus:border-[#1382e8] focus:bg-white cursor-pointer"
                       >
                         <option value="Morning (10 AM - 1 PM)">Morning (10 AM - 1 PM)</option>
                         <option value="Afternoon (1 PM - 4 PM)">Afternoon (1 PM - 4 PM)</option>
@@ -740,65 +712,63 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
                     </div>
                   </div>
 
-                  {/* Submission and assurances */}
+                  {/* Submission */}
                   <div className="pt-2 space-y-3">
                     <button
                       type="submit"
-                      className="w-full py-3.5 rounded-xl font-bold text-xs sm:text-sm text-slate-950 bg-cyan-400 hover:bg-cyan-300 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-cyan-500/20"
+                      className="w-full py-3.5 rounded-xl font-bold text-xs sm:text-sm text-white bg-[#0c0d10] hover:bg-[#23262f] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                     >
-                      <CheckCircle2 className="w-4 h-4 text-slate-950" />
+                      <CheckCircle2 className="w-4 h-4 text-white" />
                       <span>Lock In ${estimatedPrice} Quote & Reserve Parts</span>
                     </button>
-                    <div className="flex items-center justify-center gap-2 text-[11px] text-slate-400">
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>No charge right now. Pay in person or online only after full quality check.</span>
+                    <div className="flex items-center justify-center gap-2 text-[11px] text-[#6b7079]">
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#0d9963]" />
+                      <span>Zero upfront fee. Pay only after full bench test and approval.</span>
                     </div>
                   </div>
                 </form>
               )}
 
-              {/* PANE 5: Confirmed Reservation Receipt */}
+              {/* PANE 5: Confirmed */}
               {currentStep === 5 && (
-                <div className="text-center py-6 space-y-5 animate-fadeIn">
-                  <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500 text-emerald-400 mx-auto flex items-center justify-center">
+                <div className="text-center py-8 space-y-5 animate-fadeIn">
+                  <div className="w-16 h-16 rounded-full bg-[#e9f7f0] border border-[#bfe8d3] text-[#0d9963] mx-auto flex items-center justify-center">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
 
                   <div>
-                    <span className="text-xs font-mono text-emerald-400 uppercase tracking-widest block font-bold">
+                    <span className="text-xs font-mono text-[#0d9963] uppercase tracking-widest block font-bold">
                       Reservation Confirmed
                     </span>
-                    <h3 className="text-2xl font-black text-white font-heading mt-1">
+                    <h3 className="text-2xl font-black text-[#0c0d10] font-heading mt-1">
                       Your Repair Ticket is Active
                     </h3>
-                    <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+                    <p className="text-xs text-[#6b7079] mt-1 max-w-sm mx-auto">
                       Our Manahawkin technician team has received your ticket and reserved OEM-grade parts.
                     </p>
                   </div>
 
-                  {/* Ticket Badge Box */}
-                  <div className="inline-block p-4 px-8 rounded-2xl bg-slate-950 border border-cyan-500/40 shadow-inner">
-                    <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block">
+                  <div className="inline-block p-4 px-8 rounded-2xl bg-[#f6f7f8] border border-[#e8eaee]">
+                    <span className="text-[11px] font-mono text-[#6b7079] uppercase tracking-wider block">
                       Ticket Reference Code
                     </span>
-                    <span className="font-mono text-2xl font-black text-cyan-400 tracking-wider">
+                    <span className="font-mono text-2xl font-black text-[#1382e8] tracking-wider">
                       #{confirmedTicketId}
                     </span>
                   </div>
 
-                  {/* Summary receipt box */}
-                  <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-left text-xs text-slate-300 space-y-1.5 max-w-md mx-auto">
-                    <div><strong>Customer:</strong> {customerName || 'Valued Customer'} ({customerPhone || 'N/A'})</div>
+                  <div className="p-4 rounded-xl bg-[#f6f7f8] border border-[#e8eaee] text-left text-xs text-[#41454e] space-y-1.5 max-w-md mx-auto">
+                    <div><strong>Customer:</strong> {customerName || 'Customer'} ({customerPhone || 'N/A'})</div>
                     <div><strong>Device:</strong> {currentModel?.name}</div>
                     <div><strong>Service:</strong> {currentIssue?.name} (${estimatedPrice})</div>
                     <div><strong>Delivery:</strong> {serviceMode === 'mobile-van' ? `Mobile Van: ${streetAddress}` : 'In-Store Walk In: 1636 Route 72 W'}</div>
-                    <div className="text-emerald-400 font-semibold"><strong>Warranty:</strong> 60-Day Limited Guarantee Included</div>
+                    <div className="text-[#0d9963] font-semibold"><strong>Warranty:</strong> 60-Day Limited Guarantee Included</div>
                   </div>
 
                   <div className="flex flex-wrap gap-2 justify-center pt-2">
                     <a
                       href="tel:6099943235"
-                      className="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-semibold text-cyan-400 flex items-center gap-1.5"
+                      className="px-4 py-2.5 rounded-xl bg-white border border-[#e8eaee] text-xs font-semibold text-[#1382e8] flex items-center gap-1.5 shadow-sm"
                     >
                       <Phone className="w-3.5 h-3.5" />
                       <span>Call Shop: (609) 994-3235</span>
@@ -806,7 +776,7 @@ export const RepairEstimatorSection: React.FC<RepairEstimatorSectionProps> = ({
                     <button
                       type="button"
                       onClick={resetEstimator}
-                      className="px-6 py-2.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold text-xs"
+                      className="px-6 py-2.5 rounded-xl bg-[#0c0d10] hover:bg-[#23262f] text-white font-semibold text-xs"
                     >
                       Start New Estimate
                     </button>

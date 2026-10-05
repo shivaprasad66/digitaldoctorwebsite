@@ -8,7 +8,6 @@ import {
   Watch, 
   ArrowRight,
   ShieldCheck,
-  Zap,
   CheckCircle2
 } from 'lucide-react';
 
@@ -21,86 +20,68 @@ export const DevicesGridSection: React.FC<DevicesGridSectionProps> = ({ onSelect
     {
       id: 'phones',
       name: 'Smartphones & iPhones',
-      tagline: 'Same-day screen & battery restoration',
+      tagline: 'OLED screen, battery swap & charging ports',
       icon: Smartphone,
-      gradient: 'from-blue-500/20 to-cyan-500/20',
-      accentColor: 'text-cyan-400',
-      borderColor: 'group-hover:border-cyan-500/50',
-      popular: ['iPhone 16 / 15 / 14 / 13 / 12 / 11 / SE', 'Samsung Galaxy S24 Ultra & Z Fold', 'Google Pixel 8 & 9 Pro', 'Motorola Razr+'],
+      popular: ['iPhone 16 / 15 / 14 / 13 / 11 / SE', 'Samsung S24 Ultra & Z Fold', 'Google Pixel 8 & 9 Pro', 'Moto Razr+'],
       repairs: ['Cracked OLED Display', 'Dead Battery Swap', 'Charging Port Rebuild', 'Rear Glass Housing']
     },
     {
       id: 'tablets',
       name: 'iPads & Tablets',
-      tagline: 'Digitizer glass, LCDs & charging ports',
+      tagline: 'Digitizer glass, LCDs & frame bending fix',
       icon: Tablet,
-      gradient: 'from-purple-500/20 to-blue-500/20',
-      accentColor: 'text-purple-400',
-      borderColor: 'group-hover:border-purple-500/50',
-      popular: ['iPad Pro 12.9" & 11"', 'iPad Air 4th & 5th Gen', 'iPad 10th & 9th Gen', 'Samsung Galaxy Tab S9 & A11+'],
-      repairs: ['Glass Digitizer / Touch Failure', 'Bent Aluminum Frame Straightening', 'USB-C Port Replacement', 'Pencil Sensor Triage']
+      popular: ['iPad Pro 12.9" & 11"', 'iPad Air 4th & 5th Gen', 'iPad 10th & 9th Gen', 'Galaxy Tab S9 & A11+'],
+      repairs: ['Glass Digitizer / Touch Failure', 'Bent Aluminum Frame Press', 'USB-C Port Replacement', 'Pencil Sensor Triage']
     },
     {
       id: 'consoles',
       name: 'Gaming Consoles',
       tagline: 'PS5 & Xbox HDMI micro-soldering & triage',
       icon: Gamepad2,
-      gradient: 'from-emerald-500/20 to-cyan-500/20',
-      accentColor: 'text-emerald-400',
-      borderColor: 'group-hover:border-emerald-500/50',
       popular: ['PlayStation 5 (Disc / Digital / Slim)', 'Xbox Series X & Series S', 'Nintendo Switch OLED', 'PS5 Portal'],
-      repairs: ['HDMI Port Micro-Soldering', 'No Video White Light Issue', 'Overheating & Liquid Metal Repaste', 'Disc Drive Laser Alignment']
+      repairs: ['HDMI Port Micro-Soldering', 'No Video White Light Fix', 'Overheating & Liquid Metal', 'Disc Drive Laser Alignment']
     },
     {
       id: 'laptops',
       name: 'Laptops & MacBooks',
-      tagline: 'Screen, keyboard, battery & logic boards',
+      tagline: 'Retina screens, keyboards, batteries & SSDs',
       icon: Laptop,
-      gradient: 'from-amber-500/20 to-orange-500/20',
-      accentColor: 'text-amber-400',
-      borderColor: 'group-hover:border-amber-500/50',
-      popular: ['Apple MacBook Pro & Air (M1/M2/M3)', 'HP Spectre x360 & Envy', 'Dell XPS 13 & 15', 'MSI & Asus Gaming Laptops'],
-      repairs: ['Retina Display Replacement', 'Liquid Damage Diagnostic', 'Keyboard / Trackpad Repair', 'SSD Upgrade & Data Migration']
+      popular: ['MacBook Pro & Air (M1/M2/M3)', 'HP Spectre x360 & Envy', 'Dell XPS 13 & 15', 'MSI & Asus Gaming'],
+      repairs: ['Retina Display Replacement', 'Liquid Damage Diagnostic', 'Keyboard & Trackpad Repair', 'SSD Upgrade & Data Transfer']
     },
     {
       id: 'microsoldering',
       name: 'Micro-Soldering & Logic Boards',
       tagline: 'Component-level triage under 40x microscope',
       icon: Cpu,
-      gradient: 'from-rose-500/20 to-red-500/20',
-      accentColor: 'text-rose-400',
-      borderColor: 'group-hover:border-rose-500/50',
-      popular: ['Dead Motherboards', 'Burnt Power ICs & Chokes', 'Short Circuited VDD Rails', 'Emergency Chip-Off Data Recovery'],
-      repairs: ['SMD Component Soldering', 'Ultrasonic Chemical De-corrosion', 'Power Rail Jumpers & Trace Rebuild', 'Data Extraction']
+      popular: ['Dead Motherboards', 'Burnt Power ICs & Chokes', 'Short Circuited VDD Rails', 'Chip-Off Data Recovery'],
+      repairs: ['SMD Component Soldering', 'Ultrasonic Chemical Wash', 'Power Rail Jumpers Rebuild', 'Emergency Data Extraction']
     },
     {
       id: 'smartwatches',
       name: 'Smartwatches',
-      tagline: 'Apple Watch & Galaxy Watch screens',
+      tagline: 'Apple Watch & Galaxy Watch displays & seals',
       icon: Watch,
-      gradient: 'from-sky-500/20 to-indigo-500/20',
-      accentColor: 'text-sky-400',
-      borderColor: 'group-hover:border-sky-500/50',
-      popular: ['Apple Watch Ultra 1 & 2', 'Apple Watch Series 9 / 8 / 7 / SE', 'Samsung Galaxy Watch 6 & 5 Pro'],
-      repairs: ['Sapphire Glass / OLED Replacement', 'Swollen Battery Swap', 'Waterproof Pressure Gasket Reseal', 'Digital Crown Sensor']
+      popular: ['Apple Watch Ultra 1 & 2', 'Apple Watch Series 9 / 8 / 7', 'Galaxy Watch 6 & 5 Pro'],
+      repairs: ['Sapphire Glass / OLED Replacement', 'Swollen Battery Swap', 'Waterproof Gasket Reseal', 'Digital Crown Sensor']
     }
   ];
 
   return (
-    <section className="py-16 lg:py-24 relative overflow-hidden bg-slate-950">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-20 lg:py-28 relative overflow-hidden bg-[#f6f7f8] border-b border-[#e8eaee]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section title */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-bold border border-cyan-500/20 mb-3">
-            <Zap className="w-3.5 h-3.5" />
-            <span>FULL SPECTRUM HARDWARE TRIAGE</span>
+        <div className="max-w-3xl mb-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#e8eaee] text-xs font-mono text-[#41454e] mb-3">
+            <span className="w-2 h-2 rounded-full bg-[#1382e8]"></span>
+            <span>Hardware Coverage</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white font-heading tracking-tight">
-            Expert Repairs for All Leading Brands
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0c0d10] font-heading tracking-tight leading-tight">
+            Expert repairs for all leading brands
           </h2>
-          <p className="mt-3 text-slate-300 text-sm sm:text-base">
-            From shattered glass and failing batteries to micro-soldering console motherboards, our technicians have serviced over 10,000+ devices.
+          <p className="text-[#41454e] text-sm sm:text-base mt-2 max-w-2xl leading-relaxed">
+            From cracked screens and failing batteries to micro-soldering console motherboards, our technicians have serviced over 10,000+ devices.
           </p>
         </div>
 
@@ -111,44 +92,37 @@ export const DevicesGridSection: React.FC<DevicesGridSectionProps> = ({ onSelect
             return (
               <div
                 key={item.id}
-                className={`group relative rounded-2xl bg-slate-900/70 border border-slate-800 p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-cyan-500/10 ${item.borderColor}`}
+                className="rote-card p-6 flex flex-col justify-between bg-white border border-[#e8eaee] hover:border-[#1382e8]/50 transition-all duration-200"
               >
                 <div>
-                  {/* Icon & tag */}
                   <div className="flex items-center justify-between mb-4">
-                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${item.gradient} border border-slate-700/60 flex items-center justify-center ${item.accentColor}`}>
-                      <Icon className="w-6 h-6" />
+                    <div className="w-11 h-11 rounded-xl bg-[#e7f2fd] border border-[#bedcf8] flex items-center justify-center text-[#1382e8]">
+                      <Icon className="w-5 h-5" />
                     </div>
-                    <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-800/80 text-slate-300 flex items-center gap-1 border border-slate-700/60">
-                      <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-[#f6f7f8] text-[#41454e] border border-[#e8eaee] flex items-center gap-1">
+                      <ShieldCheck className="w-3 h-3 text-[#0d9963]" />
                       60-Day Warranty
                     </span>
                   </div>
 
-                  <h3 className="text-xl font-bold text-white font-heading mb-1">{item.name}</h3>
-                  <p className="text-xs text-slate-300 mb-4">{item.tagline}</p>
+                  <h3 className="text-lg font-bold text-[#0c0d10] font-heading mb-1">{item.name}</h3>
+                  <p className="text-xs text-[#6b7079] mb-4">{item.tagline}</p>
 
-                  {/* Common repairs */}
-                  <div className="space-y-1.5 mb-5 border-t border-slate-800/80 pt-3">
-                    <span className="text-[11px] uppercase font-bold text-slate-400 tracking-wider block mb-1">
-                      Common Services:
-                    </span>
+                  {/* Common repairs list */}
+                  <div className="space-y-1.5 mb-5 border-t border-[#f6f7f8] pt-3 text-xs text-[#41454e]">
                     {item.repairs.map((rep, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-xs text-slate-300">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                      <div key={idx} className="flex items-center gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#1382e8] shrink-0" />
                         <span>{rep}</span>
                       </div>
                     ))}
                   </div>
 
-                  {/* Supported models */}
-                  <div className="pt-2 border-t border-slate-800/60 mb-5">
-                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block mb-1.5">
-                      Popular Devices:
-                    </span>
+                  {/* Popular tags */}
+                  <div className="pt-2 border-t border-[#f6f7f8] mb-5">
                     <div className="flex flex-wrap gap-1">
-                      {item.popular.map((model, idx) => (
-                        <span key={idx} className="text-[10px] px-2 py-0.5 rounded bg-slate-950 text-slate-400 border border-slate-800">
+                      {item.popular.slice(0, 3).map((model, idx) => (
+                        <span key={idx} className="text-[10px] px-2 py-0.5 rounded bg-[#f6f7f8] text-[#6b7079] border border-[#e8eaee]">
                           {model}
                         </span>
                       ))}
@@ -159,10 +133,10 @@ export const DevicesGridSection: React.FC<DevicesGridSectionProps> = ({ onSelect
                 <a
                   href="#estimator"
                   onClick={() => onSelectCategory(item.id)}
-                  className="w-full py-2.5 rounded-xl font-semibold text-xs text-slate-300 bg-slate-950 hover:bg-cyan-950/60 border border-slate-800 hover:border-cyan-500/50 hover:text-cyan-300 text-center transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="w-full py-2.5 rounded-xl font-semibold text-xs text-[#0c0d10] bg-[#f6f7f8] hover:bg-[#ebeef2] border border-[#e8eaee] hover:border-[#1382e8]/40 text-center transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                 >
-                  <span>Estimate {item.name}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <span>Estimate {item.name.split(' ')[0]} Repair</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-[#6b7079]" />
                 </a>
               </div>
             );
