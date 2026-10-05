@@ -10,7 +10,8 @@ import {
   Menu, 
   X, 
   ArrowRight,
-  Phone
+  Phone,
+  MapPin
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -40,70 +41,65 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   const navLinks = [
-    { name: 'Repairs & Pricing', href: '#estimator', icon: Wrench },
-    { name: 'Mobile Van Unit', href: '#mobile-unit', icon: Truck },
-    { name: 'Mail-In Service', href: '#mail-in', action: onOpenMailIn, icon: Mail },
-    { name: 'Certified Store', href: '#shop', icon: ShoppingBag },
-    { name: '60-Day Warranty', href: '#warranty', icon: ShieldCheck },
-    { name: 'Help & FAQ', href: '#faq', icon: HelpCircle },
+    { name: 'Repair Pricing', href: '#estimator' },
+    { name: 'Mobile Van', href: '#mobile-unit' },
+    { name: 'Mail-In', action: onOpenMailIn },
+    { name: 'Certified Store', href: '#shop' },
+    { name: '60-Day Warranty', href: '#warranty' },
+    { name: 'FAQ', href: '#faq' },
+    { name: 'Contact & Store', href: '#contact' }
   ];
 
   return (
     <header
       className={`sticky top-0 z-40 transition-all duration-300 ${
         isScrolled
-          ? 'bg-slate-950/95 backdrop-blur-md border-b border-slate-800 shadow-xl shadow-black/40 py-2.5'
+          ? 'bg-slate-950/95 backdrop-blur-md border-b border-slate-850 shadow-xl shadow-black/40 py-2.5'
           : 'bg-slate-950/80 backdrop-blur-sm border-b border-slate-900 py-3.5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* Logo */}
+          
+          {/* Logo with technical subtitle */}
           <a href="#" className="flex items-center gap-3 group">
             <div className="relative">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-600 p-0.5 shadow-lg shadow-cyan-500/20 group-hover:shadow-cyan-500/40 transition-shadow">
+              <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 p-1 flex items-center justify-center group-hover:border-cyan-500/50 transition-colors">
                 <img
                   src="/logo.png"
                   alt="Digital Doctor Repairs Logo"
-                  className="w-full h-full object-contain rounded-[10px] bg-slate-950 p-1"
-                  onError={(e) => {
-                    // Fallback to text icon if logo fails
-                    (e.target as HTMLElement).style.display = 'none';
-                  }}
+                  className="w-full h-full object-contain"
                 />
               </div>
-              <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-slate-950" title="Store Open"></span>
+              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border border-slate-950" title="Store Open"></span>
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-black tracking-tight text-white group-hover:text-cyan-400 transition-colors leading-tight font-heading">
+              <span className="text-base sm:text-lg font-black tracking-tight text-white group-hover:text-cyan-400 transition-colors leading-tight font-heading">
                 DIGITAL DOCTOR
               </span>
-              <span className="text-[10px] font-bold tracking-widest text-cyan-400/90 uppercase">
-                Repairs & Tech • Manahawkin
+              <span className="text-[10px] font-mono tracking-widest text-slate-400 uppercase">
+                Tech Lab • Manahawkin NJ
               </span>
             </div>
           </a>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden xl:flex items-center gap-1">
+          {/* Desktop Navigation Links (Makcliff Clean Style) */}
+          <nav className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => {
-              const Icon = link.icon;
               return link.action ? (
                 <button
                   key={link.name}
                   onClick={link.action}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-900/80 transition-all cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-900 transition-all cursor-pointer"
                 >
-                  <Icon className="w-4 h-4 text-cyan-400" />
                   {link.name}
                 </button>
               ) : (
                 <a
                   key={link.name}
                   href={link.href}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-900/80 transition-all"
+                  className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-900 transition-all"
                 >
-                  <Icon className="w-4 h-4 text-slate-400" />
                   {link.name}
                 </a>
               );
@@ -112,25 +108,26 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Action CTAs */}
           <div className="flex items-center gap-2.5">
-            {/* Track Repair Button */}
+            {/* Track Repair Quick Tool */}
             <button
               onClick={onOpenTracking}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-200 bg-slate-900 hover:bg-slate-800 border border-slate-700/80 hover:border-cyan-500/50 transition-all cursor-pointer shadow-sm"
-              title="Track existing repair status"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium text-slate-300 bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-slate-700 transition-all cursor-pointer"
+              title="Track repair ticket"
             >
               <Search className="w-3.5 h-3.5 text-cyan-400" />
               <span>Track Repair</span>
+              <span className="text-[10px] text-slate-500 font-mono">⌘K</span>
             </button>
 
             {/* Shopping Cart Button */}
             <button
               onClick={onOpenCart}
-              className="relative p-2 rounded-lg text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 transition-colors cursor-pointer"
+              className="relative p-2 rounded-lg text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-850 border border-slate-800 transition-colors cursor-pointer"
               title="View Cart"
             >
-              <ShoppingBag className="w-4 h-4 text-slate-300" />
+              <ShoppingBag className="w-4 h-4" />
               {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-cyan-500 text-slate-950 font-bold text-[10px] flex items-center justify-center animate-bounce">
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-cyan-400 text-slate-950 font-bold text-[9px] flex items-center justify-center font-mono">
                   {cartCount}
                 </span>
               )}
@@ -139,16 +136,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Instant Quote Primary CTA */}
             <button
               onClick={onOpenQuote}
-              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-md shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:-translate-y-0.5 transition-all cursor-pointer"
+              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-slate-950 bg-cyan-400 hover:bg-cyan-300 transition-all cursor-pointer shadow-md shadow-cyan-500/20"
             >
-              <span>Get Quote</span>
-              <ArrowRight className="w-4 h-4" />
+              <span>Instant Quote</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
 
             {/* Mobile Hamburger Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden p-2 rounded-lg text-slate-300 hover:text-white bg-slate-900 border border-slate-800"
+              className="lg:hidden p-2 rounded-lg text-slate-300 hover:text-white bg-slate-900 border border-slate-800"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -158,9 +155,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
-          <div className="xl:hidden mt-3 pt-3 border-t border-slate-800/80 pb-3 space-y-1.5 animate-fadeIn">
+          <div className="lg:hidden mt-3 pt-3 border-t border-slate-800 pb-3 space-y-1 animate-fadeIn">
             {navLinks.map((link) => {
-              const Icon = link.icon;
               return link.action ? (
                 <button
                   key={link.name}
@@ -168,9 +164,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                     link.action!();
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-200 hover:bg-slate-900 text-left"
+                  className="w-full px-3 py-2 rounded-lg text-xs font-semibold text-slate-200 hover:bg-slate-900 text-left block"
                 >
-                  <Icon className="w-4 h-4 text-cyan-400" />
                   {link.name}
                 </button>
               ) : (
@@ -178,31 +173,30 @@ export const Navbar: React.FC<NavbarProps> = ({
                   key={link.name}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-200 hover:bg-slate-900"
+                  className="px-3 py-2 rounded-lg text-xs font-semibold text-slate-200 hover:bg-slate-900 block"
                 >
-                  <Icon className="w-4 h-4 text-cyan-400" />
                   {link.name}
                 </a>
               );
             })}
 
-            <div className="pt-2 border-t border-slate-800/80 grid grid-cols-2 gap-2">
+            <div className="pt-3 border-t border-slate-800 grid grid-cols-2 gap-2">
               <button
                 onClick={() => {
                   onOpenTracking();
                   setMobileMenuOpen(false);
                 }}
-                className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold text-slate-200 bg-slate-900 border border-slate-700"
+                className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-200 bg-slate-900 border border-slate-800"
               >
                 <Search className="w-3.5 h-3.5 text-cyan-400" />
                 Track Repair
               </button>
               <a
                 href="tel:6099943235"
-                className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold text-cyan-400 bg-cyan-950/40 border border-cyan-800/50"
+                className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-cyan-400 bg-slate-900 border border-slate-800"
               >
                 <Phone className="w-3.5 h-3.5" />
-                Call Shop
+                Call (609) 994-3235
               </a>
             </div>
 
@@ -211,7 +205,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onOpenQuote();
                 setMobileMenuOpen(false);
               }}
-              className="w-full mt-2 py-3 rounded-xl text-center text-sm font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-600 shadow-md shadow-cyan-500/25"
+              className="w-full mt-2 py-2.5 rounded-xl text-center text-xs font-bold text-slate-950 bg-cyan-400"
             >
               Get Free Instant Quote
             </button>
